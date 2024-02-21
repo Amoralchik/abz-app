@@ -1,22 +1,23 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { PositionsModule } from './positions/positions.module';
+import { UsersModule } from './users/users.module';
+import { PrismaService } from './prisma.service';
+import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
-import { TodoitemsModule } from './todoitems/todoitems.module';
-
-const databaseUrl =
-  process.env.DATABASE_URL || 'mongodb://localhost:27017/test';
-
 @Module({
   imports: [
-    MongooseModule.forRoot(databaseUrl),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
-    TodoitemsModule,
+    ConfigModule.forRoot(),
+    PositionsModule,
+    UsersModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}
