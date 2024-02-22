@@ -1,14 +1,10 @@
-import { Controller, Get, Redirect } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AuthService } from './guard/auth.service';
 import { ApiResponse } from '@nestjs/swagger';
 
 @Controller()
 export class AppController {
   constructor(private readonly authService: AuthService) {}
-
-  // @Get()
-  // @Redirect('swagger')
-  // getHello(): void {}
 
   @Get('token')
   @ApiResponse({
