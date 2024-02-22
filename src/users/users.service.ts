@@ -21,24 +21,31 @@ export class UsersService {
     });
     await resized.toFile(`public/users/${photo.originalname}`);
 
-    const user = await this.prisma.user.create({
-      data: {
-        email,
-        name,
-        phone,
-        photo: `public/users/${photo}.png`,
-        position: {
-          connect: { id: +positionId },
+    try {
+      const user = await this.prisma.user.create({
+        data: {
+          email,
+          name,
+          phone,
+          photo: `public/users/${photo.originalname}`,
+          position: {
+            connect: { id: +positionId },
+          },
+          registrationTimestamp: new Date(),
         },
-        registrationTimestamp: new Date(),
-      },
-    });
+      });
 
-    return {
-      success: true,
-      message: 'New user successfully registered',
-      user_id: user.id,
-    };
+      return {
+        success: true,
+        message: 'New user successfully registered',
+        user_id: user.id,
+      };
+    } catch (error) {
+      return {
+        success: true,
+        message: 'User with this phone or email already exist',
+      };
+    }
   }
 
   async findAll(page: number, count: number) {

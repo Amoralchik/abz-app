@@ -6,9 +6,9 @@ import { ApiResponse } from '@nestjs/swagger';
 export class AppController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get()
-  @Redirect('swagger')
-  getHello(): void {}
+  // @Get()
+  // @Redirect('swagger')
+  // getHello(): void {}
 
   @Get('token')
   @ApiResponse({

@@ -25,7 +25,7 @@ import { findAllUserDto } from './dto/find-all-user.dto';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { FindOneParams } from 'src/dto/findone.dto';
 
-const regExp = RegExp(/^image\/.*/);
+const regExp = RegExp(/^image\/(jpeg|png)$/);
 
 @Controller('users')
 @ApiTags('users')

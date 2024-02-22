@@ -8,7 +8,9 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 const port = process.env.PORT || 3000;
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
+  });
 
   app.useGlobalPipes(
     // https://stackoverflow.com/questions/70225539/how-validate-query-params-in-nestjs
