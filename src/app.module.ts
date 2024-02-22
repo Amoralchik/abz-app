@@ -5,19 +5,11 @@ import { PositionsModule } from './positions/positions.module';
 import { UsersModule } from './users/users.module';
 import { PrismaService } from './prisma.service';
 import { ConfigModule } from '@nestjs/config';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
+import { AuthService } from './guard/auth.service';
 
 @Module({
-  imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
-    }),
-    ConfigModule.forRoot(),
-    PositionsModule,
-    UsersModule,
-  ],
+  imports: [ConfigModule.forRoot(), PositionsModule, UsersModule],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService, AuthService],
 })
 export class AppModule {}

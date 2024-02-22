@@ -19,7 +19,7 @@ async function main() {
 
   tinify.key = process.env.TINIFY_API_KEY;
 
-  for (let index = 1; index < 45; index++) {
+  for (let index = 1; index <= 45; index++) {
     const source = tinify.fromUrl(faker.image.avatar());
     const resized = source.resize({
       method: 'cover',

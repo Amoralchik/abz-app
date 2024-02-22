@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma.service';
 import tinify from 'tinify';
 
 @Injectable()
 export class UsersService {
+  host = process.env.HOST;
   constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto, photo: Express.Multer.File) {
@@ -41,12 +41,39 @@ export class UsersService {
     };
   }
 
-  async findAll() {
-    const users = await this.prisma.user.findMany();
-    return users.map((u) => {
-      u.photo = `http://localhost:3000/${u.photo}`;
+  async findAll(page: number, count: number) {
+    const pageNumber = page - 1;
+    const users = await this.prisma.user.findMany({
+      take: count,
+      skip: count * pageNumber,
+      include: {
+        position: true,
+      },
+    });
+    const countUsers = await this.prisma.user.count();
+    const totalPages = Math.ceil(countUsers / count);
+
+    const formattedUsers = users.map((u) => {
+      u.photo = `${this.host}${u.photo}`;
       return u;
     });
+
+    return {
+      totalPages,
+      countUsers,
+      count: formattedUsers.length,
+      links: {
+        next_url:
+          pageNumber + 1 >= totalPages
+            ? null
+            : `${this.host}users?page=${page + 1}&count=${count}`,
+        prev_url:
+          pageNumber < 1
+            ? null
+            : `${this.host}users?page=${pageNumber}&count=${count}`,
+      },
+      users: formattedUsers,
+    };
   }
 
   findOne(id: number) {
@@ -55,13 +82,5 @@ export class UsersService {
         id,
       },
     });
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user using: ${updateUserDto}`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }

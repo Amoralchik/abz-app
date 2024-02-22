@@ -6,6 +6,9 @@ import {
   MaxLength,
   MinLength,
   IsMobilePhone,
+  Min,
+  IsInt,
+  IsPositive,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -56,10 +59,10 @@ export class CreateUserDto {
     nullable: false,
     minimum: 1,
   })
-  // @Min(1)
-  // @IsInt()
+  @Min(1)
+  @IsInt()
   @IsNotEmpty()
-  // @IsPositive()
+  @IsPositive()
   positionId: number;
 
   @ApiProperty({

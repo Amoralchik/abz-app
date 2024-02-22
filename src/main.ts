@@ -10,7 +10,14 @@ const port = process.env.PORT || 3000;
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    // https://stackoverflow.com/questions/70225539/how-validate-query-params-in-nestjs
+    new ValidationPipe({
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   app.useStaticAssets(
     join(__dirname, '../..', 'public'), // strange
@@ -20,6 +27,7 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('CRUD')
     .setDescription('The CRUD API description')
     .setVersion('1.0')
